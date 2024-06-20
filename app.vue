@@ -89,8 +89,8 @@ const longLoop = (callerName) => {
         &nbsp;
         <button @click="handleClickAsyncFake">Run Await Fake</button>
         <br><br>
-        <div>
-          Running?&nbsp;{{ isRunning }}
+        <div class="status">
+          Running?&nbsp;{{ `${isRunning}`.toUpperCase() }}
         </div>
         <br><br><br>
         <button @click="() => console.clear()">Clear Logs</button>
@@ -117,7 +117,17 @@ const longLoop = (callerName) => {
   color: white;
 }
 
+.status {
+  font-size: larger;
+}
+
 button {
   cursor: pointer;
+}
+
+.cursor-status {
+  height: 300px;
+  width: 300px;
+  background-color: black;
 }
 </style>
