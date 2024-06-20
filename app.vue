@@ -21,15 +21,31 @@ const handleClickAsync = async () => {
   console.log(isRunning.value);
 }
 
+const handleClickAsyncFake = async () => {
+  isRunning.value = true;
+  console.log(isRunning.value);
+  await l1Fake();
+
+  longLoop();
+  isRunning.value = false;
+  console.log(isRunning.value);
+}
+
 const l1 = async () => {
   await new Promise((res) => {
     console.log('Timeout START');
     setTimeout(() => {
-      res(true);
       console.log('Timeout END');
-    }, 3000);
+      res(true);
+    }, 0);
   }).then(() => {
+    longLoop();
   });
+}
+
+const l1Fake = async () => {
+  await console.log('l1Fake');
+  longLoop();
 }
 
 const longLoop = () => {
@@ -46,6 +62,8 @@ const longLoop = () => {
         <button @click="handleClick">Run</button>
         &nbsp;
         <button @click="handleClickAsync">Run Await</button>
+        &nbsp;
+        <button @click="handleClickAsyncFake">Run Await Fake</button>
         <br><br>
         <div>
           Running?&nbsp;{{ isRunning }}
