@@ -1,13 +1,13 @@
 <script setup>
 const isRunning = ref(false);
 
-// WITH timeout async
+// WITH $fetch
 const handleClick = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
-  l1();
+  asyncFunction();
 
-  longLoop();
+  longLoop('handleClick');
   isRunning.value = false;
   console.log(isRunning.value);
 }
@@ -15,9 +15,9 @@ const handleClick = async () => {
 const handleClickAsync = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
-  await l1();
+  await asyncFunction();
 
-  longLoop();
+  longLoop('handleClickAsync');
   isRunning.value = false;
   console.log(isRunning.value);
 }
@@ -25,21 +25,20 @@ const handleClickAsync = async () => {
 const handleClickAsyncDelay = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
-  await l1(3000);
+  await asyncFunction();
 
-  longLoop();
+  longLoop('handleClickAsyncDelay');
   isRunning.value = false;
   console.log(isRunning.value);
 }
 
-
-// WITHOUT timeout async
+// WITHOUT $fetch
 const handleClickFake = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
-  l1Fake();
+  asyncFunctionFake();
 
-  longLoop();
+  longLoop('handleClickFake');
   isRunning.value = false;
   console.log(isRunning.value);
 }
@@ -47,37 +46,32 @@ const handleClickFake = async () => {
 const handleClickAsyncFake = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
-  await l1Fake();
+  await asyncFunctionFake();
 
-  longLoop();
+  longLoop('handleClickAsyncFake');
   isRunning.value = false;
   console.log(isRunning.value);
 }
 
-
 // async functions
-const l1 = async (delay = 0) => {
-  await new Promise((res) => {
-    console.log('Timeout START');
-    setTimeout(() => {
-      console.log(`Timeout END (${delay})`);
-      res(true);
-    }, delay);
-  }).then(() => {
-    longLoop();
-  });
+const asyncFunction = async (delay = 0) => {
+  console.log('asyncFunction START');
+  await $fetch(`${window.location.protocol}//${window.location.host}/api/delayed-fetch`);
+  longLoop('asyncFunction');
+  console.log('asyncFunction END');
+}
+const asyncFunctionFake = async () => {
+  console.log('asyncFunctionFake START');
+  await (() => { });
+  longLoop('asyncFunctionFake');
+  console.log('asyncFunctionFake END')
 }
 
-const l1Fake = async () => {
-  await console.log('l1Fake START');
-  longLoop();
-  console.log('l1Fake END')
-}
-
-const longLoop = () => {
-  console.log('longLoop START');
-  for (let i = 0; i < 1_000_000_000; i++) { }
-  console.log('longLoop END');
+const longLoop = (callerName) => {
+  console.log(`longLoop (${callerName}) START`);
+  const endTime = Date.now() + 1000;
+  while (Date.now() < endTime) { }
+  console.log(`longLoop (${callerName}) END`);
 }
 </script>
 
@@ -98,6 +92,8 @@ const longLoop = () => {
         <div>
           Running?&nbsp;{{ isRunning }}
         </div>
+        <br><br><br>
+        <button @click="() => console.clear()">Clear Logs</button>
       </div>
     </div>
   </div>
