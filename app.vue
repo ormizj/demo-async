@@ -1,6 +1,7 @@
 <script setup>
 const isRunning = ref(false);
 
+// WITH timeout async
 const handleClick = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
@@ -21,6 +22,28 @@ const handleClickAsync = async () => {
   console.log(isRunning.value);
 }
 
+const handleClickAsyncDelay = async () => {
+  isRunning.value = true;
+  console.log(isRunning.value);
+  await l1(3000);
+
+  longLoop();
+  isRunning.value = false;
+  console.log(isRunning.value);
+}
+
+
+// WITHOUT timeout async
+const handleClickFake = async () => {
+  isRunning.value = true;
+  console.log(isRunning.value);
+  l1Fake();
+
+  longLoop();
+  isRunning.value = false;
+  console.log(isRunning.value);
+}
+
 const handleClickAsyncFake = async () => {
   isRunning.value = true;
   console.log(isRunning.value);
@@ -31,21 +54,24 @@ const handleClickAsyncFake = async () => {
   console.log(isRunning.value);
 }
 
-const l1 = async () => {
+
+// async functions
+const l1 = async (delay = 0) => {
   await new Promise((res) => {
     console.log('Timeout START');
     setTimeout(() => {
-      console.log('Timeout END');
+      console.log(`Timeout END (${delay})`);
       res(true);
-    }, 0);
+    }, delay);
   }).then(() => {
     longLoop();
   });
 }
 
 const l1Fake = async () => {
-  await console.log('l1Fake');
+  await console.log('l1Fake START');
   longLoop();
+  console.log('l1Fake END')
 }
 
 const longLoop = () => {
@@ -62,6 +88,10 @@ const longLoop = () => {
         <button @click="handleClick">Run</button>
         &nbsp;
         <button @click="handleClickAsync">Run Await</button>
+        &nbsp;
+        <button @click="handleClickAsyncDelay">Run Await Delay</button>
+        <br><br>
+        <button @click="handleClickFake">Run Fake</button>
         &nbsp;
         <button @click="handleClickAsyncFake">Run Await Fake</button>
         <br><br>
