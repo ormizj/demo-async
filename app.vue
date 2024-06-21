@@ -56,10 +56,28 @@ const handleClickAsyncFake = async () => {
 // async functions
 const asyncFunction = async (delay = 0) => {
   console.log('asyncFunction START');
-  await $fetch(`${window.location.protocol}//${window.location.host}/api/delayed-fetch`);
+  // await $fetch(`${window.location.protocol}//${window.location.host}/api/delayed-fetch`);
+  await asyncTimeout();
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/queueMicrotask
+  // queueMicrotask(() => {
+  //   console.log('microtask');
+  // })
+
   longLoop('asyncFunction');
   console.log('asyncFunction END');
 }
+
+const asyncTimeout = (seconds = 0) => {
+  return new Promise((res) => {
+    console.log('asyncTimeout START');
+    setTimeout(() => {
+      console.log('asyncTimeout END');
+      res();
+    });
+  });
+}
+
 const asyncFunctionFake = async () => {
   console.log('asyncFunctionFake START');
   await (() => { });
