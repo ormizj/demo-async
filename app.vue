@@ -124,10 +124,4 @@ const longLoop = (callerName) => {
 button {
   cursor: pointer;
 }
-
-.cursor-status {
-  height: 300px;
-  width: 300px;
-  background-color: black;
-}
 </style>
